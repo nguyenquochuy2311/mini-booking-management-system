@@ -1,0 +1,367 @@
+:root {
+  /* Light theme (default) */
+  --bg: #eef1f8;
+  --bg-2: #f7f8fc;
+  --surface: #ffffff;
+  --surface-2: #f6f8fc;
+  --border: #e7e9f1;
+  --border-strong: #d6d9e6;
+  --text: #0f172a;
+  --text-2: #475569;
+  --muted: #7c879b;
+  --primary: #6366f1;
+  --primary-2: #8b5cf6;
+  --primary-ink: #ffffff;
+  --primary-soft: #eef0ff;
+  --danger: #e11d48;
+  --danger-soft: #fef2f4;
+  --success: #16a34a;
+  --glass: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --toast-bg: #0f172a;
+  --toast-fg: #ffffff;
+  --skeleton: linear-gradient(90deg, #eef1f7 25%, #e3e7f0 37%, #eef1f7 63%);
+  --hero-grad: linear-gradient(105deg, rgba(49, 46, 129, 0.86) 0%, rgba(76, 29, 149, 0.62) 45%, rgba(15, 23, 42, 0.25) 100%);
+
+  --r-sm: 10px;
+  --r: 14px;
+  --r-lg: 20px;
+  --ring: 0 0 0 3px rgba(99, 102, 241, 0.3);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.05);
+  --shadow: 0 10px 30px -12px rgba(15, 23, 42, 0.18), 0 2px 6px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 24px 60px -20px rgba(49, 46, 129, 0.4);
+
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+[data-theme='dark'] {
+  --bg: #070b15;
+  --bg-2: #0b1120;
+  --surface: #131a2c;
+  --surface-2: #0f1626;
+  --border: rgba(148, 163, 184, 0.14);
+  --border-strong: rgba(148, 163, 184, 0.26);
+  --text: #e7ebf4;
+  --text-2: #aeb8cc;
+  --muted: #8b95ab;
+  --primary: #818cf8;
+  --primary-2: #a78bfa;
+  --primary-soft: rgba(129, 140, 248, 0.16);
+  --danger: #fb7185;
+  --danger-soft: rgba(225, 29, 72, 0.16);
+  --glass: rgba(17, 24, 39, 0.62);
+  --glass-border: rgba(148, 163, 184, 0.16);
+  --toast-bg: #f8fafc;
+  --toast-fg: #0f172a;
+  --skeleton: linear-gradient(90deg, #131a2c 25%, #1b2438 37%, #131a2c 63%);
+  --hero-grad: linear-gradient(105deg, rgba(2, 6, 23, 0.92) 0%, rgba(49, 46, 129, 0.6) 50%, rgba(2, 6, 23, 0.35) 100%);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow: 0 14px 36px -16px rgba(0, 0, 0, 0.7);
+  --shadow-lg: 0 28px 70px -22px rgba(0, 0, 0, 0.8);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 600px at 100% -10%, color-mix(in srgb, var(--primary) 16%, transparent) 0%, transparent 55%),
+    radial-gradient(1000px 500px at -10% 0%, color-mix(in srgb, var(--primary-2) 12%, transparent) 0%, transparent 50%),
+    linear-gradient(180deg, var(--bg-2), var(--bg));
+  background-attachment: fixed;
+  color: var(--text);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+h1, h2, h3 {
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+/* ---- Buttons ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  padding: 0.55rem 0.95rem;
+  transition: transform 0.08s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  white-space: nowrap;
+}
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+}
+.btn-primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  box-shadow: 0 8px 18px -8px rgba(99, 102, 241, 0.7);
+}
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0 14px 28px -8px rgba(99, 102, 241, 0.85);
+  transform: translateY(-1px);
+}
+.btn-ghost {
+  color: var(--text-2);
+  background: var(--surface);
+  border-color: var(--border);
+}
+.btn-ghost:hover:not(:disabled) {
+  background: var(--surface-2);
+  color: var(--text);
+}
+.btn-block {
+  width: 100%;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.icon-btn:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+.icon-btn.danger:hover:not(:disabled) {
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 40%, transparent);
+  background: var(--danger-soft);
+}
+.icon-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+}
+.icon-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---- Inputs ---- */
+.input {
+  font: inherit;
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.input::placeholder {
+  color: var(--muted);
+  opacity: 0.7;
+}
+.input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: var(--ring);
+}
+.input[aria-invalid='true'] {
+  border-color: var(--danger);
+}
+.input-sm {
+  padding: 0.45rem 0.6rem;
+  width: auto;
+  min-width: 0;
+}
+input[type='datetime-local'] {
+  color-scheme: light dark;
+}
+
+/* ---- Primitives ---- */
+.muted {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--primary);
+  background: var(--primary-soft);
+  border-radius: 999px;
+}
+.field-error {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--danger);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.spinner {
+  width: 15px;
+  height: 15px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---- Skeleton ---- */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  background-image: var(--skeleton);
+  background-size: 400% 100%;
+  animation: shimmer 1.3s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+/* ---- Entrance animation ---- */
+.stagger {
+  animation: rise 0.4s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* ---- Toaster ---- */
+.toaster {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 60;
+  pointer-events: none;
+}
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 0.95rem;
+  background: var(--toast-bg);
+  color: var(--toast-fg);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: toast-in 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+.toast-icon {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+.toast-success .toast-icon {
+  background: rgba(34, 197, 94, 0.22);
+  color: #22c55e;
+}
+.toast-error .toast-icon {
+  background: rgba(244, 63, 94, 0.22);
+  color: #f43f5e;
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---- Mobile & touch refinements ---- */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+.input {
+  min-width: 0;
+}
+.btn {
+  min-height: 44px;
+}
+[data-theme='dark'] .input::placeholder {
+  opacity: 1;
+}
+@media (pointer: coarse) {
+  .icon-btn {
+    width: 44px;
+    height: 44px;
+  }
+  .input-sm {
+    min-height: 44px;
+  }
+}
+@media (max-width: 780px) {
+  body {
+    background-attachment: scroll; /* avoid iOS fixed-bg jank */
+  }
+}
+@media (max-width: 540px) {
+  .toaster {
+    left: 1rem;
+    right: 1rem;
+    bottom: 4.75rem; /* clear the floating "New booking" button */
+  }
+  .toast {
+    width: 100%;
+  }
+}

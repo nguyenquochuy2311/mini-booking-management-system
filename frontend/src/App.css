@@ -1,0 +1,709 @@
+.app {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 4rem;
+}
+
+/* ---- Header ---- */
+.app-header {
+  position: sticky;
+  top: 0.75rem;
+  z-index: 30;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7rem 1rem;
+  margin-bottom: 1.25rem;
+  background: var(--glass);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  border-radius: 12px;
+  box-shadow: 0 8px 18px -8px rgba(99, 102, 241, 0.8);
+}
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.brand-name {
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+}
+.brand-sub {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Auth bar */
+.auth-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+.login-bar .input-sm {
+  width: 9.5rem;
+}
+.auth-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.3rem 0.7rem 0.3rem 0.35rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  border-radius: 50%;
+}
+
+/* ---- Hero ---- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  min-height: 220px;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: flex-end;
+  isolation: isolate;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  transform: scale(1.04);
+  animation: hero-zoom 18s ease-in-out infinite alternate;
+}
+@keyframes hero-zoom {
+  to {
+    transform: scale(1.12);
+  }
+}
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--hero-grad);
+}
+.hero-content {
+  padding: 1.5rem 1.6rem 1.7rem;
+  color: #fff;
+  max-width: 640px;
+}
+.hero-eyebrow {
+  margin: 0 0 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+}
+.hero-title {
+  margin: 0;
+  font-size: 1.85rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #fff;
+  text-shadow: 0 2px 16px rgba(2, 6, 23, 0.4);
+}
+.hero-sub {
+  margin: 0.5rem 0 0.9rem;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 30rem;
+}
+.hero-stats {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+.hero-stat strong {
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+.hero-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* ---- Layout ---- */
+.layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+@media (max-width: 780px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Rooms rail stays in view while the booking list scrolls; scrolls internally
+   if there are more rooms than fit the viewport. */
+.rooms-panel {
+  position: sticky;
+  top: 92px;
+  max-height: calc(100vh - 108px);
+  overflow-y: auto;
+}
+@media (max-width: 780px) {
+  .rooms-panel {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1.1rem 1.25rem 1.35rem;
+  box-shadow: var(--shadow-sm);
+}
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+}
+.panel-head h2 {
+  margin: 0;
+  font-size: 1.12rem;
+}
+.panel-sub {
+  margin: 0.15rem 0 0;
+}
+
+/* ---- Rooms (photo cards) ---- */
+.room-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.room-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  text-align: left;
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.room-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow);
+}
+.room-card:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+}
+.room-card.active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary), 0 12px 26px -16px rgba(99, 102, 241, 0.9);
+}
+.room-cover {
+  position: relative;
+  display: block;
+  height: 92px;
+  background: var(--surface-2);
+}
+.room-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.room-card:hover .room-cover img {
+  transform: scale(1.05);
+}
+.room-cover img {
+  transition: transform 0.4s ease;
+}
+.room-cover-badge {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  border-radius: 999px;
+}
+.room-check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  border-radius: 50%;
+  box-shadow: 0 4px 10px -2px rgba(99, 102, 241, 0.8);
+}
+.room-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.6rem 0.75rem 0.7rem;
+}
+.room-name {
+  font-weight: 700;
+}
+.room-capacity {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* ---- Bookings ---- */
+.booking-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.booking-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--row-accent, var(--primary));
+  border-radius: var(--r);
+  background: var(--surface);
+  transition: transform 0.14s ease, box-shadow 0.2s ease;
+}
+.booking-item:hover {
+  transform: translateX(2px);
+  box-shadow: var(--shadow-sm);
+}
+.booking-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  font-weight: 700;
+  color: #fff;
+  background: var(--row-accent, var(--primary));
+  border-radius: 12px;
+}
+.booking-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+.booking-name {
+  font-size: 0.98rem;
+}
+.booking-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+.booking-time .dot {
+  opacity: 0.5;
+}
+.booking-item .icon-btn {
+  margin-left: auto;
+}
+.booking-skeleton {
+  height: 64px;
+}
+
+/* ---- Empty states ---- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  padding: 2.2rem 1rem;
+}
+.empty-state svg {
+  margin-bottom: 0.5rem;
+}
+.empty-title {
+  margin: 0;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ---- Schedule: list + form side by side ---- */
+.schedule {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 1.1rem;
+  align-items: start;
+}
+.schedule-form {
+  position: sticky;
+  top: 92px;
+  max-height: calc(100vh - 108px);
+  overflow-y: auto;
+}
+
+/* Mobile bottom-sheet layer (desktop hides these) */
+.fab,
+.sheet-backdrop,
+.sheet-close {
+  display: none;
+}
+.fab {
+  position: fixed;
+  right: 1rem;
+  bottom: calc(1rem + env(safe-area-inset-bottom));
+  z-index: 55;
+  box-shadow: var(--shadow-lg);
+}
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  background: rgba(2, 6, 23, 0.55);
+  backdrop-filter: blur(2px);
+  animation: fade-in 0.2s ease;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+body.sheet-locked {
+  overflow: hidden;
+}
+
+@media (max-width: 980px) {
+  .schedule {
+    grid-template-columns: 1fr;
+  }
+  /* The create form becomes a slide-up bottom sheet, opened by the FAB. */
+  .schedule-form {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: auto; /* override the desktop sticky top so the sheet hugs its content */
+    bottom: 0;
+    z-index: 60;
+    max-height: 88vh;
+    overflow-y: auto;
+    padding: 0.4rem 1rem calc(1.2rem + env(safe-area-inset-bottom));
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-radius: 22px 22px 0 0;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(112%);
+    transition: transform 0.34s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .schedule-form.open {
+    transform: translateY(0);
+  }
+  .schedule-form::before {
+    content: '';
+    display: block;
+    width: 42px;
+    height: 4px;
+    margin: 0.4rem auto 0.7rem;
+    border-radius: 999px;
+    background: var(--border-strong);
+  }
+  .schedule-form .form-card {
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+  .sheet-close {
+    display: inline-flex;
+    position: absolute;
+    top: 0.55rem;
+    right: 0.7rem;
+  }
+  .fab,
+  .sheet-backdrop {
+    display: block;
+  }
+  .fab {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+/* ---- Booking form (card) ---- */
+.form-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 1rem 1rem 1.1rem;
+}
+.form-card-muted {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 120px;
+}
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+/* ---- Ghost (live preview) ---- */
+.booking-item.ghost {
+  border: 1px dashed var(--primary);
+  border-left: 3px dashed var(--row-accent, var(--primary));
+  background: color-mix(in srgb, var(--primary) 6%, var(--surface));
+  animation: ghost-pulse 1.6s ease-in-out infinite;
+}
+.booking-item.ghost .booking-avatar {
+  opacity: 0.85;
+}
+.ghost-tag {
+  margin-left: auto;
+  align-self: flex-start;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--primary);
+  background: var(--primary-soft);
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+}
+@keyframes ghost-pulse {
+  50% {
+    border-color: color-mix(in srgb, var(--primary) 45%, transparent);
+    opacity: 0.82;
+  }
+}
+.form-head {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.form-head h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+.form-head-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: var(--primary);
+  background: var(--primary-soft);
+  border-radius: 8px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.field-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-2);
+}
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+@media (max-width: 540px) {
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+}
+/* ---- Banner ---- */
+.banner-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--danger-soft);
+  color: var(--danger);
+  border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent);
+  border-radius: var(--r);
+  padding: 0.7rem 1rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+/* ---- Mobile room picker (dropdown replaces the sidebar on phones) ---- */
+.room-picker {
+  display: none;
+}
+.room-picker .room-select {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 18px) center, calc(100% - 13px) center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 2rem;
+}
+
+/* ---- Mobile refinements ---- */
+.brand-text,
+.room-info {
+  min-width: 0;
+}
+.booking-body {
+  flex: 1 1 auto;
+}
+.booking-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.theme-toggle {
+  color: var(--text-2);
+}
+@media (max-width: 780px) {
+  /* a wrapped header on a phone would eat too much vertical space if pinned */
+  .app-header {
+    position: static;
+    top: auto;
+  }
+  /* Content-first mobile: drop the marketing hero + photo sidebar; pick rooms
+     via a compact dropdown so Bookings get the full screen. */
+  .hero {
+    display: none;
+  }
+  .rooms-panel {
+    display: none;
+  }
+  .room-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 1.1rem;
+  }
+}
+@media (max-width: 560px) {
+  /* Logged-out: let the login form take a full-width row and inputs go fluid. */
+  .header-actions:has(.login-bar) {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .login-bar {
+    flex: 1 1 100%;
+  }
+  .login-bar .input-sm {
+    flex: 1 1 8rem;
+    width: auto;
+    min-width: 0;
+  }
+  .login-bar .btn {
+    flex: 1 1 7rem;
+  }
+
+  /* Signed-in: collapse to avatar + icon-only logout, stays inline next to brand. */
+  .auth-chip {
+    padding: 0.25rem;
+    border: none;
+    background: transparent;
+  }
+  .auth-chip .muted {
+    display: none;
+  }
+  .logout-button {
+    padding: 0;
+    width: 44px;
+  }
+  .logout-button .btn-label {
+    display: none;
+  }
+}
+@media (max-width: 540px) {
+  .hero {
+    min-height: 172px;
+  }
+  .hero-content {
+    padding: 1.1rem 1.1rem 1.25rem;
+  }
+  .hero-title {
+    font-size: 1.45rem;
+  }
+  .hero-sub {
+    font-size: 0.9rem;
+  }
+  /* bottom-anchored overlay keeps the (bottom-aligned) hero text legible on narrow screens */
+  .hero-overlay {
+    background: linear-gradient(180deg, rgba(2, 6, 23, 0.22), rgba(2, 6, 23, 0.82));
+  }
+  .booking-item {
+    padding-right: 0.6rem;
+  }
+}
