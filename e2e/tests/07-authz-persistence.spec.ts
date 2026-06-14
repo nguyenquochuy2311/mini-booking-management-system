@@ -1,4 +1,5 @@
 import { test, expect } from '../src/fixtures'
+import { ADMIN, API_URL } from '../src/helpers/constants'
 import { nextWindow, toUtcIso } from '../src/helpers/time'
 
 test.describe('Phase 7 — Authorization, visibility & persistence', () => {
@@ -6,6 +7,7 @@ test.describe('Phase 7 — Authorization, visibility & persistence', () => {
     bookingPage,
     api,
     makeBooking,
+    request,
   }) => {
     const rooms = await api.getRooms()
     const alpha = rooms.find((r) => r.name === 'Alpha')!
@@ -16,7 +18,12 @@ test.describe('Phase 7 — Authorization, visibility & persistence', () => {
       end_time: toUtcIso(w.endUtc),
     })
 
+    // Use a dedicated token: logging out revokes it server-side, so it must not
+    // be the shared storageState token other tests rely on.
+    const fresh = await (await request.post(`${API_URL}/login`, { data: ADMIN, headers: { Accept: 'application/json' } })).json()
     await bookingPage.goto()
+    await bookingPage.setStoredToken(fresh.token)
+    await bookingPage.reload()
     await bookingPage.selectRoom('Alpha')
     // Authenticated: form + delete are available, the booking is shown.
     await expect(bookingPage.form()).toBeVisible()
