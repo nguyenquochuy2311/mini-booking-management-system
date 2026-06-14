@@ -2,24 +2,31 @@
 set -e
 
 # IMPORTANT: `php artisan serve` propagates the .env FILE into its subprocess,
-# which would override real environment variables. On a production host (Render)
-# the DB_* and APP_KEY come from injected env vars, so we must NOT create a local
-# .env there (it would shadow them with .env.example's local-MySQL defaults).
-# Locally (docker-compose), there are no injected vars, so we synthesize one.
-if [ ! -f .env ] && [ "$APP_ENV" != "production" ]; then
-  cp .env.example .env
+# overriding real env vars. On a production host (Render) DB_*/APP_KEY come from
+# injected env vars, so we must NOT create a local .env there.
+if [ "$APP_ENV" = "production" ]; then
+  if [ -z "$APP_KEY" ]; then
+    echo "FATAL: APP_KEY env var is required in production (php artisan key:generate --show)." >&2
+    exit 1
+  fi
+else
+  # Local (docker-compose): synthesise an env + key for zero-config startup.
+  [ -f .env ] || cp .env.example .env
+  grep -q '^APP_KEY=base64:' .env || php artisan key:generate --force
 fi
 
-# Generate an app key only when one isn't already provided (env var on prod, or
-# a fresh local .env). Skips on Render where APP_KEY is set.
-if [ -z "$APP_KEY" ] && ! grep -q '^APP_KEY=base64:' .env 2>/dev/null; then
-  php artisan key:generate --force
-fi
-
-# Wait for the database, then migrate. `migrate` exits non-zero until reachable.
+# Wait for the database, then migrate. Errors are surfaced (not hidden) so the
+# real cause shows up in the logs; give up after ~60s with a clear message.
 echo "Waiting for database to become available..."
-until php artisan migrate --force 2>/dev/null; do
-  echo "  database not ready — retrying in 3s"
+attempt=0
+until php artisan migrate --force 2>&1; do
+  attempt=$((attempt + 1))
+  if [ "$attempt" -ge 20 ]; then
+    echo "FATAL: database unreachable / migrations failed after 20 attempts (see error above)." >&2
+    echo "  → Check DB_HOST/DB_PORT/DB_DATABASE/DB_USERNAME/DB_PASSWORD, and MYSQL_ATTR_SSL_CA for TiDB (TLS required)." >&2
+    exit 1
+  fi
+  echo "  not ready — retry ${attempt}/20 in 3s"
   sleep 3
 done
 
