@@ -1,0 +1,77 @@
+# Render Blueprint — deploys the whole app:
+#   • mini-booking-api : Laravel API (Docker) → TiDB Cloud
+#   • mini-booking-web : React SPA (static site)
+#
+# Secrets / cross-references are marked `sync: false` (set them in the Render
+# dashboard). See README "Deploy to Render" for the exact 2-step wiring.
+services:
+  # ---------------------------------------------------------------- Backend API
+  - type: web
+    name: mini-booking-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    region: singapore
+    healthCheckPath: /api/rooms
+    autoDeploy: true
+    envVars:
+      - key: APP_KEY # `php artisan key:generate --show`
+        sync: false
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL # https://mini-booking-api.onrender.com
+        sync: false
+      # --- TiDB Cloud Serverless ---
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST # gateway01.<region>.prod.aws.tidbcloud.com
+        sync: false
+      - key: DB_PORT
+        value: "4000"
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_USERNAME # <prefix>.root
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: MYSQL_ATTR_SSL_CA
+        value: /etc/ssl/certs/ca-certificates.crt
+      # --- CORS: the SPA origin (set after the web service gets its URL) ---
+      - key: FRONTEND_URL # https://mini-booking-web.onrender.com
+        sync: false
+      # --- keep session/cache/queue off the DB ---
+      - key: SESSION_DRIVER
+        value: file
+      - key: CACHE_STORE
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: PHP_CLI_SERVER_WORKERS
+        value: "8"
+
+  # --------------------------------------------------------------- Frontend SPA
+  - type: web
+    name: mini-booking-web
+    runtime: static
+    rootDir: ./frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    pullRequestPreviewsEnabled: false
+    envVars:
+      - key: VITE_API_BASE_URL # https://mini-booking-api.onrender.com/api
+        sync: false
+    routes:
+      # SPA fallback so client-side routing/refresh works
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff

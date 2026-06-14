@@ -1,0 +1,9 @@
+# Local AI/editor context — not part of the project
+CLAUDE.md
+.claude/
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
