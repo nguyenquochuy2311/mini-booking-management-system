@@ -113,12 +113,21 @@ export function BookingProvider({ children }) {
     [selectedRoomId],
   )
 
-  const login = useCallback(async (credentials) => {
-    const { data } = await apiClient.post('/login', credentials)
-    setStoredToken(data.token)
-    setToken(data.token)
-    return data.user
-  }, [])
+  const login = useCallback(
+    async (credentials) => {
+      const { data } = await apiClient.post('/login', credentials)
+      setStoredToken(data.token)
+      setToken(data.token)
+      // Land on the first room after login (e.g. when coming back from a logout
+      // that reset the view), mirroring the default selection on first access.
+      if (selectedRoomId == null && rooms.length > 0) {
+        setBookingsLoading(true)
+        setSelectedRoomId(rooms[0].id)
+      }
+      return data.user
+    },
+    [selectedRoomId, rooms],
+  )
 
   const logout = useCallback(async () => {
     try {
