@@ -5,7 +5,9 @@ authenticated admins create and delete bookings, with server-enforced overlap
 prevention.
 
 - **Backend:** Laravel 13 (PHP 8.3), Sanctum token auth, Pest tests.
-- **Frontend:** React 19 + Vite, Axios, React Hook Form, Context API.
+- **Frontend:** React 19 + Vite — responsive UI with dark mode, real-time preview,
+  and a mobile bottom-sheet; Axios, React Hook Form, Context API.
+- **Tests:** Pest (backend, 25) + Playwright E2E (33, real browser).
 - **Database:** MySQL 8 locally (Docker); TiDB Cloud Serverless in production —
   same `mysql` driver and migrations for both.
 
@@ -63,6 +65,18 @@ php artisan test                 # Pest feature tests — run on sqlite :memory:
 Tests never touch MySQL/TiDB (`phpunit.xml` pins `DB_CONNECTION=sqlite`,
 `DB_DATABASE=:memory:`), so they are fast and safe to run anywhere.
 
+**End-to-end (Playwright)** — real-browser tests in `e2e/` drive the SPA against a
+running API (start the stack first):
+
+```bash
+cd e2e
+npm install
+npx playwright install chromium   # first time only
+npx playwright test               # 33 tests across 8 phases
+```
+
+Coverage today: **25** backend Pest tests + **33** Playwright E2E tests, all green.
+
 ---
 
 ## Deploy to Render
@@ -109,6 +123,7 @@ Base URL: `/api`. All responses are JSON. Resource payloads are wrapped in a
 | `POST` | `/api/login` | public | `{email, password}` | `200 {token, user}` | `422` invalid credentials |
 | `GET` | `/api/rooms` | public | – | `200 {data: Room[]}` | – |
 | `GET` | `/api/rooms/{room}/bookings` | public | – | `200 {data: Booking[]}` | `404` room not found |
+| `GET` | `/api/user` | `auth:sanctum` | – | `200 {id, name, email}` | `401` (token check) |
 | `POST` | `/api/bookings` | `auth:sanctum` | `{room_id, user_name, start_time, end_time}` | `201 {data: Booking}` | `401`, `422` validation/overlap |
 | `DELETE` | `/api/bookings/{booking}` | `auth:sanctum` | – | `204` | `401`, `404` booking not found |
 | `POST` | `/api/logout` | `auth:sanctum` | – | `204` | `401` |
@@ -165,7 +180,15 @@ stable **13.x** is used.
 
 **Auth scope maps to the domain.** `GET` endpoints are public (anyone browses
 rooms/bookings); `POST`/`DELETE` require `auth:sanctum` (only admins mutate).
-This is deliberate rather than protecting everything or nothing.
+This is deliberate rather than protecting everything or nothing. The boundary is
+enforced at the API (write without a valid token ⇒ `401`); the SPA mirrors it by
+validating the stored token on load (`GET /api/user`) and reactively dropping to
+read-only on any `401`, so create/delete affordances appear only when truly logged in.
+
+**Frontend UX.** The room picker auto-selects the first room on access/login;
+logout resets the view to a clean state; a live dashed "preview" card shows the
+booking as you type; dark mode is persisted; the layout is fully responsive with a
+mobile bottom-sheet create form. Server `422` errors map onto the matching form fields.
 
 **Performance.** A composite index on `bookings (room_id, start_time, end_time)`
 backs both the overlap `select exists(...)` and the per-room booking list, which
@@ -184,7 +207,7 @@ is a single indexed query (`$room->bookings()`).
   (parameterized — no SQLi surface); Sanctum tokens are stored hashed at rest.
 - **Trade-off:** the SPA holds the token in `localStorage` (XSS-readable) for
   simplicity; a higher-assurance build would use Sanctum's httpOnly-cookie SPA
-  auth. The 401 interceptor clears a stale token (UI reflects it on next reload).
+  auth. (A `401` is handled reactively — see *Auth scope* above.)
 
 **Dual database, one codebase.** The same `mysql` driver and migrations target
 both local MySQL 8 and TiDB Cloud Serverless. The only difference is TLS: TiDB
@@ -237,8 +260,8 @@ notification/side-effect work behind a queue.
   is required today).
 - **Caching** the public rooms list and **queueing** any future async work.
 - **Broader test coverage** (unit tests for the service/repository in isolation)
-  and **CI** (run `pest` + `pint` + `eslint`/`vite build` on every push).
-- **Frontend polish** — optimistic updates, loading skeletons, nicer date pickers.
+  and **CI** (run `pest` + `pint` + `eslint` + Playwright on every push).
+- **Frontend polish** — optimistic updates and a richer date/time picker.
 
 ---
 
@@ -247,4 +270,6 @@ notification/side-effect work behind a queue.
 ```
 backend/    Laravel 13 API (layered: Controller → Request → Service → Repository → Resource)
 frontend/   React 19 + Vite SPA (Axios client, Context, React Hook Form)
+e2e/        Playwright end-to-end suite (page objects, fixtures, 8 phases)
+render.yaml Render Blueprint (backend web service + frontend static site)
 ```
