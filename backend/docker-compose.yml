@@ -1,0 +1,46 @@
+# Local full stack: Laravel API + MySQL 8.
+#
+# The app image is self-contained (code is baked in at build time) — we do NOT
+# bind-mount the source. That keeps `docker-compose up` deterministic: the
+# container's .env is generated from .env.example (local MySQL defaults), so it
+# never picks up a developer's TiDB .env. The `environment:` block below also
+# pins the DB to the local `mysql` service. Production (TiDB) is driven by the
+# real .env / Render env vars instead — see render.yaml.
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: booking
+      DB_USERNAME: booking
+      DB_PASSWORD: secret
+      MYSQL_ATTR_SSL_CA: ""   # no TLS against local MySQL
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: booking
+      MYSQL_USER: booking
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - "3307:3306"   # host 3307 → container 3306 (avoids clashing with a local MySQL)
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-psecret"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  mysql-data:
