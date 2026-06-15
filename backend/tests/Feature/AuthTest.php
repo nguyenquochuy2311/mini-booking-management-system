@@ -69,6 +69,12 @@ describe('GET /api/user (token check)', function () {
     });
 });
 
+describe('Health probe', function () {
+    it('returns ok without auth', function () {
+        getJson('/api/health')->assertOk()->assertJson(['status' => 'ok']);
+    });
+});
+
 describe('Security headers', function () {
     it('sets defensive headers on API responses', function () {
         getJson('/api/rooms')
